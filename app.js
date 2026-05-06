@@ -430,6 +430,33 @@ function selectScene(sceneId) {
     initializeConversation(sceneId);
 }
 
+function startRandomPractice() {
+    // 获取所有已解锁的场景
+    const unlocked = getUnlockedScenes();
+    
+    // 过滤掉剧情模式场景（class 为 story-card 的场景）
+    const storySceneIds = [];
+    document.querySelectorAll('.scene-card.story-card').forEach(card => {
+        const sceneId = card.dataset.scene;
+        if (sceneId) storySceneIds.push(sceneId);
+    });
+    
+    const nonStoryScenes = unlocked.filter(id => !storySceneIds.includes(id));
+    
+    if (nonStoryScenes.length === 0) {
+        // 没有可用的非剧情场景，导航到场景选择页
+        navigateTo('scenes');
+        return;
+    }
+    
+    // 随机选择一个场景
+    const randomIndex = Math.floor(Math.random() * nonStoryScenes.length);
+    const randomSceneId = nonStoryScenes[randomIndex];
+    
+    // 直接开始该场景的练习
+    selectScene(randomSceneId);
+}
+
 // ========================================
 // 对话系统
 // ========================================
